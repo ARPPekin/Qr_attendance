@@ -1,8 +1,9 @@
-// Konfiguracja Supabase
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.16.0/dist/esm/supabase.js';
+
 const supabaseUrl = 'https://twyruqtqvxsnqctwkswg.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3eXJ1cXRxdnhzbnFjdHdrc3dnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEyNzM2NjksImV4cCI6MjA1Njg0OTY2OX0.K5esJlkidj-JlnR3StGQre3YtnCfVwV1ypB8qibeIHo'; // Twój klucz
 
-// Upewnij się, że obiekt `supabase` jest inicjalizowany po załadowaniu pliku
+// Inicjalizuj klienta Supabase
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 let currentStream = null;
