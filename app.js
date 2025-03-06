@@ -1,3 +1,6 @@
+// Importowanie Supabase i jsQR w module
+import { createClient } from './libs/supabase.min.js';
+import jsQR from './libs/jsQR.js'; // Jeśli jsQR to moduł 
 
 // Konfiguracja Supabase
 const supabaseUrl = 'https://twyruqtqvxsnqctwkswg.supabase.co';
