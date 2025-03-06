@@ -46,7 +46,8 @@ async function startScanning() {
                 facingMode: { ideal: "environment" },
                 width: { ideal: 1280 },
                 height: { ideal: 720 }
-            }
+            },
+            audio: false  // Dodaj to, aby wykluczyć dostęp do mikrofonu
         };
 
         const stream = await navigator.mediaDevices.getUserMedia(constraints);
@@ -69,6 +70,7 @@ async function startScanning() {
         resetScanner();
     }
 }
+
 
 // ✅ Pobieranie danych z Supabase
 async function fetchAttendanceData() {
