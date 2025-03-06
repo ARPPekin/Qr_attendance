@@ -1,6 +1,6 @@
 const SHEET_ID = '1hxsTLvulC5fXuvM6qIID4ofFRawecDgm7N2WiQhqWBw';
 const SHEET_NAME = 'Arkusz1';
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby6ObVFR8P9bEvQS7PMfAP8pwv-rBTOgbuvq-6jCcYL7i-IBT6WxQgzptJI0mAEZGLtYA/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzavNO8Cywa_7FFl4spUrtYbBeoJcTRh0BXqoJDgitHkjDt3uwnGcmXTtEqDIJ8hKnybg/exec';
 
 let currentStream = null;
 let currentId = null;
