@@ -1,7 +1,9 @@
+// app.js
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/module/index.mjs'
+
 // Konfiguracja Supabase
-const supabaseUrl = 'https://twyruqtqvxsnqctwkswg.supabase.co'; // Zamień na swój URL Supabase
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3eXJ1cXRxdnhzbnFjdHdrc3dnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEyNzM2NjksImV4cCI6MjA1Njg0OTY2OX0.K5esJlkidj-JlnR3StGQre3YtnCfVwV1ypB8qibeIHo'; // Zamień na swój anon-key
-// Inicjalizowanie klienta Supabase
+const supabaseUrl = 'https://twyruqtqvxsnqctwkswg.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3eXJ1cXRxdnhzbnFjdHdrc3dnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEyNzM2NjksImV4cCI6MjA1Njg0OTY2OX0.K5esJlkidj-JlnR3StGQre3YtnCfVwV1ypB8qibeIHo'; // Twój klucz
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 
@@ -35,40 +37,46 @@ function scanFrame(video) {
 }
 
 // ✅ Uruchamianie skanera
+// app.js
 async function startScanning() {
     try {
         const video = document.getElementById('qr-video');
-        
+        video.style.display = 'block';
+
+        // Zatrzymaj istniejący strumień
         if (currentStream) {
             currentStream.getTracks().forEach(track => track.stop());
         }
 
+        // Ustawienia kamery
         const constraints = {
             video: {
-                facingMode: { ideal: "environment" },
+                facingMode: "environment",
                 width: { ideal: 1280 },
                 height: { ideal: 720 }
-            },
-            audio: false  // Dodaj to, aby wykluczyć dostęp do mikrofonu
+            }
         };
 
-        const stream = await navigator.mediaDevices.getUserMedia(constraints);
-        video.srcObject = stream;
-        currentStream = stream;
+        // Inicjalizacja kamery
+        currentStream = await navigator.mediaDevices.getUserMedia(constraints);
+        video.srcObject = currentStream;
 
-        await new Promise((resolve) => {
-            video.onloadedmetadata = () => {
-                video.play().then(resolve).catch(err => {
-                    console.error('❌ Błąd uruchamiania wideo:', err);
-                    resetScanner();
-                });
-            };
+        // Specjalne ustawienia dla iOS
+        video.setAttribute('playsinline', 'true');
+        video.muted = true;
+
+        // Oczekiwanie na gotowość
+        await new Promise((resolve, reject) => {
+            video.onloadedmetadata = resolve;
+            video.onerror = reject;
+            video.play().catch(reject);
         });
 
         document.getElementById('start-scan').disabled = true;
         scanFrame(video);
+
     } catch (err) {
-        alert('❌ Błąd dostępu do kamery: ' + err.message);
+        alert('Błąd kamery: ' + err.message);
         resetScanner();
     }
 }
@@ -123,7 +131,7 @@ async function approveCheckIn() {
     try {
         const { data, error } = await supabase
             .from('attendance')
-            .update({ checkInTime: new Date().toISOString() }) // Zatwierdzamy obecność
+            .update({ checkintime: new Date().toISOString() }) // Zatwierdzamy obecność
             .eq('id', currentId); // Filtrujemy po ID
 
         if (error) throw error;
