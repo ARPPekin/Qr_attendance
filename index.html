@@ -21,9 +21,9 @@
         </div>
     </div>
 
-    <!-- Zmiana kolejności i źródła ładowania bibliotek -->
-    <script src="libs/supabase.min.js"></script>
-    <script src="libs/jsQR.js"></script>
-    <script type="module" src="app.js"></script> <!-- Dodaj type="module" -->
+    <!-- Ładowanie pliku Supabase z CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.16.0/dist/umd/supabase.min.js"></script> <!-- CDN bez "type=module" -->
+    <script src="libs/jsQR.js"></script> <!-- Twoja biblioteka do skanowania QR -->
+    <script src="app.js"></script> <!-- Załaduj app.js jako zwykły skrypt -->
 </body>
 </html>

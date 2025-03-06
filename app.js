@@ -1,13 +1,8 @@
-// Importowanie Supabase i jsQR w module
-import { createClient } from './libs/supabase.min.js';
-import jsQR from './libs/jsQR.js'; // Jeśli jsQR to moduł 
-
 // Konfiguracja Supabase
 const supabaseUrl = 'https://twyruqtqvxsnqctwkswg.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3eXJ1cXRxdnhzbnFjdHdrc3dnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEyNzM2NjksImV4cCI6MjA1Njg0OTY2OX0.K5esJlkidj-JlnR3StGQre3YtnCfVwV1ypB8qibeIHo'; // Twój klucz
-const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+const supabase = supabase.createClient(supabaseUrl, supabaseKey); // Skrypt Supabase jest już załadowany globalnie!
 
-// Reszta kodu pozostaje bez zmian
 let currentStream = null;
 let currentId = null;
 
