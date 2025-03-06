@@ -7,79 +7,65 @@ let currentId = null;
 
 document.getElementById('start-scan').addEventListener('click', startScanning);
 
-// Funkcja pobierająca dane przez publiczny JSON
-async function fetchSheetData() {
-  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_NAME}`;
-  
-  const response = await fetch(url);
-  const text = await response.text();
-  const json = JSON.parse(text.replace(/.*google.visualization.Query.setResponse\({(.*)}\);/, '{$1}'));
-  
-  return json.table.rows.map(row => ({
-    id: row.c[0]?.v || '',
-    name: row.c[1]?.v || '',
-    surname: row.c[2]?.v || '',
-    checkInTime: row.c[3]?.v || null
-  }));
-}
-
 async function startScanning() {
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({ 
-      video: { facingMode: "environment" } 
-    });
-    
-    const video = document.getElementById('qr-video');
-    video.srcObject = stream;
-    video.play();
-    currentStream = stream;
+    try {
+        const video = document.getElementById('qr-video');
+        
+        // Najpierw zatrzymaj istniejący strumień
+        if (currentStream) {
+            currentStream.getTracks().forEach(track => track.stop());
+        }
 
-    document.getElementById('start-scan').disabled = true;
-    scanFrame(video);
-  } catch (err) {
-    alert('Błąd dostępu do kamery: ' + err.message);
-  }
-}
+        // Nowe ustawienia kamery z obsługą błędów dla iOS
+        const constraints = {
+            video: {
+                facingMode: { ideal: "environment" },
+                width: { ideal: 1280 },
+                height: { ideal: 720 },
+                frameRate: { ideal: 30 }
+            }
+        };
 
-function scanFrame(video) {
-  const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d');
-  
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
-  
-  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  
-  const code = jsQR(imageData.data, imageData.width, imageData.height, {
-    inversionAttempts: "dontInvert"
-  });
+        // Alternatywne ustawienia dla Firefox
+        if (navigator.userAgent.includes('Firefox')) {
+            constraints.video = {
+                facingMode: "environment",
+                width: { min: 640, ideal: 1280 },
+                height: { min: 480, ideal: 720 }
+            };
+        }
 
-  if (code) {
-    handleQRScan(code.data);
-    video.srcObject.getTracks().forEach(track => track.stop());
-  } else {
-    requestAnimationFrame(() => scanFrame(video));
-  }
-}
+        const stream = await navigator.mediaDevices.getUserMedia(constraints)
+            .catch(err => {
+                if (err.name === 'NotFoundError') {
+                    throw new Error('Nie znaleziono kamery tylnej');
+                }
+                throw err;
+            });
 
-async function handleQRScan(qrData) {
-  try {
-    const participants = await fetchSheetData();
-    const record = participants.find(p => p.id === qrData);
+        video.srcObject = stream;
+        currentStream = stream;
+        
+        // Specjalna obsługa dla Safari
+        if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
+            video.setAttribute('playsinline', true);
+            video.setAttribute('muted', true);
+            video.setAttribute('autoplay', true);
+        }
 
-    if (record) {
-      currentId = qrData;
-      showUserInfo(record);
-    } else {
-      alert('Nie znaleziono rekordu!');
-      resetScanner();
+        await new Promise((resolve) => {
+            video.onloadedmetadata = () => {
+                video.play();
+                resolve();
+            };
+        });
+
+        document.getElementById('start-scan').disabled = true;
+        scanFrame(video);
+    } catch (err) {
+        alert('Błąd dostępu do kamery: ' + err.message);
+        resetScanner();
     }
-  } catch (error) {
-    alert('Błąd połączenia z bazą danych');
-    resetScanner();
-  }
 }
 
-// Reszta kodu bez zmian (showUserInfo, approveCheckIn, resetScanner)
-// ...
+// Reszta funkcji bez zmian (scanFrame, handleQRScan, showUserInfo, approveCheckIn, resetScanner)
