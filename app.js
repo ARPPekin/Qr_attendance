@@ -4,13 +4,64 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby6ObVFR8P9bEvQS7PMf
 
 let currentStream = null;
 let currentId = null;
+let isScanning = false;
 
-// Najpierw deklarujemy wszystkie funkcje
-function scanFrame(video) {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    
+async function startScanning() {
     try {
+        if (isScanning) return;
+        isScanning = true;
+        
+        const video = document.getElementById('qr-video');
+        video.style.display = 'block';
+
+        // Reset poprzedniego strumienia
+        if (currentStream) {
+            currentStream.getTracks().forEach(track => track.stop());
+        }
+
+        // Konfiguracja kamery
+        const constraints = {
+            video: {
+                facingMode: "environment",
+                width: { min: 640, ideal: 1280 },
+                height: { min: 480, ideal: 720 }
+            }
+        };
+
+        // Inicjalizacja kamery
+        currentStream = await navigator.mediaDevices.getUserMedia(constraints);
+        video.srcObject = currentStream;
+
+        // Oczekiwanie na gotowość wideo
+        await new Promise((resolve) => {
+            video.onloadedmetadata = () => {
+                video.play();
+                resolve();
+            };
+        });
+
+        // Rozpocznij pętlę skanowania
+        const scanLoop = () => {
+            if (!isScanning) return;
+            scanFrame(video);
+            requestAnimationFrame(scanLoop);
+        };
+        
+        scanLoop();
+
+    } catch (err) {
+        isScanning = false;
+        alert('Błąd kamery: ' + err.message);
+    }
+}
+
+function scanFrame(video) {
+    try {
+        if (video.readyState !== video.HAVE_ENOUGH_DATA) return;
+
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         
@@ -23,74 +74,19 @@ function scanFrame(video) {
 
         if (code) {
             handleQRScan(code.data);
-            video.srcObject.getTracks().forEach(track => track.stop());
-        } else {
-            requestAnimationFrame(() => scanFrame(video));
+            stopScanning();
         }
     } catch (error) {
-        console.error('Błąd analizy klatki:', error);
-        resetScanner();
+        console.error('Błąd skanowania:', error);
     }
 }
 
-async function startScanning() {
-    try {
-        const video = document.getElementById('qr-video');
-        
-        if (currentStream) {
-            currentStream.getTracks().forEach(track => track.stop());
-        }
-
-        const constraints = {
-            video: {
-                facingMode: { ideal: "environment" },
-                width: { ideal: 1280 },
-                height: { ideal: 720 }
-            }
-        };
-
-        const stream = await navigator.mediaDevices.getUserMedia(constraints)
-            .catch(err => {
-                if (err.name === 'NotFoundError') {
-                    throw new Error('Nie znaleziono kamery tylnej');
-                }
-                throw err;
-            });
-
-        video.srcObject = stream;
-        currentStream = stream;
-
-        await new Promise((resolve) => {
-            video.onloadedmetadata = () => {
-                video.play().then(resolve).catch(err => {
-                    console.error('Błąd uruchamiania wideo:', err);
-                    resetScanner();
-                });
-            };
-        });
-
-        document.getElementById('start-scan').disabled = true;
-        scanFrame(video);
-    } catch (err) {
-        alert('Błąd dostępu do kamery: ' + err.message);
-        resetScanner();
+function stopScanning() {
+    isScanning = false;
+    if (currentStream) {
+        currentStream.getTracks().forEach(track => track.stop());
     }
+    document.getElementById('start-scan').disabled = false;
 }
 
-// Reszta funkcji pozostaje bez zmian
-async function fetchSheetData() { /* ... */ }
-async function handleQRScan(qrData) { /* ... */ }
-function showUserInfo(record) { /* ... */ }
-async function approveCheckIn() { /* ... */ }
-function resetScanner() { /* ... */ }
-
-// Inicjalizacja na końcu pliku
-document.getElementById('start-scan').addEventListener('click', startScanning);
-document.getElementById('approve-btn').addEventListener('click', approveCheckIn);
-
-// Service Worker
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('service-worker.js');
-    });
-}
+// Reszta funkcji pozostaje bez zmian (fetchSheetData, handleQRScan, showUserInfo, approveCheckIn)
