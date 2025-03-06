@@ -1,6 +1,7 @@
-const SHEET_ID = '1hxsTLvulC5fXuvM6qIID4ofFRawecDgm7N2WiQhqWBw';
-const SHEET_NAME = 'Arkusz1';
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyRhoD-ijISnO-377vps_n2j44u7kL68_UPG7HNT0TM8MSss3hO4IFo9ye8KAK6RHr6Rw/exec';
+// Konfiguracja Supabase
+const supabaseUrl = 'https://twyruqtqvxsnqctwkswg.supabase.co'; // Zamień na swój URL Supabase
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3eXJ1cXRxdnhzbnFjdHdrc3dnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEyNzM2NjksImV4cCI6MjA1Njg0OTY2OX0.K5esJlkidj-JlnR3StGQre3YtnCfVwV1ypB8qibeIHo'; // Zamień na swój anon-key
+const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
 let currentStream = null;
 let currentId = null;
@@ -69,32 +70,26 @@ async function startScanning() {
     }
 }
 
-// ✅ Pobieranie danych z Google Sheets
-async function fetchSheetData() {
+// ✅ Pobieranie danych z Supabase
+async function fetchAttendanceData() {
     try {
-      const response = await fetch(SCRIPT_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          action: 'get'
-        })
-      });
-      
-      if (!response.ok) throw new Error('Network response was not ok');
-      
-      return await response.json();
+        const { data, error } = await supabase
+            .from('attendance')
+            .select('*'); // Pobiera wszystkie kolumny
+
+        if (error) throw error;
+
+        return data;
     } catch (error) {
-      console.error('❌ Błąd pobierania danych:', error);
-      return [];
+        console.error('❌ Błąd pobierania danych:', error);
+        return [];
     }
-  }
+}
 
 // ✅ Obsługa zeskanowanego kodu QR
 async function handleQRScan(qrData) {
-    const records = await fetchSheetData();
-    const record = records.find(row => row.ID === qrData);
+    const records = await fetchAttendanceData();
+    const record = records.find(row => row.id === qrData);
 
     if (record) {
         currentId = qrData;
@@ -107,9 +102,9 @@ async function handleQRScan(qrData) {
 
 // ✅ Wyświetlanie informacji o użytkowniku
 function showUserInfo(record) {
-    document.getElementById('user-id').textContent = record.ID;
-    document.getElementById('user-name').textContent = record.Imię;
-    document.getElementById('user-surname').textContent = record.Nazwisko;
+    document.getElementById('user-id').textContent = record.id;
+    document.getElementById('user-name').textContent = record.name;
+    document.getElementById('user-surname').textContent = record.surname;
     document.getElementById('user-info').classList.remove('hidden');
     document.getElementById('approve-btn').classList.remove('hidden');
 }
@@ -117,37 +112,25 @@ function showUserInfo(record) {
 // ✅ Zatwierdzenie obecności
 async function approveCheckIn() {
     if (!currentId) {
-      alert('❌ Nie znaleziono użytkownika.');
-      return;
+        alert('❌ Nie znaleziono użytkownika.');
+        return;
     }
-  
+
     try {
-      const response = await fetch(SCRIPT_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          action: 'update',
-          id: currentId,
-          timestamp: new Date().toISOString()
-        })
-      });
-  
-      if (!response.ok) throw new Error(response.statusText);
-      
-      const result = await response.json();
-      if (result.status === 'success') {
+        const { data, error } = await supabase
+            .from('attendance')
+            .update({ checkInTime: new Date().toISOString() }) // Zatwierdzamy obecność
+            .eq('id', currentId); // Filtrujemy po ID
+
+        if (error) throw error;
+
         alert('✅ Obecność zatwierdzona!');
         resetScanner();
-      } else {
-        alert('❌ Błąd zatwierdzania obecności: ' + (result.message || ''));
-      }
     } catch (error) {
-      console.error('❌ Błąd zapisu obecności:', error);
-      alert('❌ Błąd połączenia z serwerem');
+        console.error('❌ Błąd zapisu obecności:', error);
+        alert('❌ Błąd połączenia z serwerem');
     }
-  }
+}
 
 // ✅ Resetowanie skanera
 function resetScanner() {
