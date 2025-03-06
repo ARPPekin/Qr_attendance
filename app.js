@@ -1,6 +1,6 @@
 const SHEET_ID = '1hxsTLvulC5fXuvM6qIID4ofFRawecDgm7N2WiQhqWBw';
 const SHEET_NAME = 'Arkusz1';
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzavNO8Cywa_7FFl4spUrtYbBeoJcTRh0BXqoJDgitHkjDt3uwnGcmXTtEqDIJ8hKnybg/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyRhoD-ijISnO-377vps_n2j44u7kL68_UPG7HNT0TM8MSss3hO4IFo9ye8KAK6RHr6Rw/exec';
 
 let currentStream = null;
 let currentId = null;
@@ -72,14 +72,24 @@ async function startScanning() {
 // ✅ Pobieranie danych z Google Sheets
 async function fetchSheetData() {
     try {
-        const response = await fetch(`${SCRIPT_URL}?action=get`);
-        const data = await response.json();
-        return data;
+      const response = await fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          action: 'get'
+        })
+      });
+      
+      if (!response.ok) throw new Error('Network response was not ok');
+      
+      return await response.json();
     } catch (error) {
-        console.error('❌ Błąd pobierania danych:', error);
-        return [];
+      console.error('❌ Błąd pobierania danych:', error);
+      return [];
     }
-}
+  }
 
 // ✅ Obsługa zeskanowanego kodu QR
 async function handleQRScan(qrData) {
@@ -107,25 +117,37 @@ function showUserInfo(record) {
 // ✅ Zatwierdzenie obecności
 async function approveCheckIn() {
     if (!currentId) {
-        alert('❌ Nie znaleziono użytkownika.');
-        return;
+      alert('❌ Nie znaleziono użytkownika.');
+      return;
     }
-
+  
     try {
-        const timestamp = new Date().toISOString();
-        const response = await fetch(`${SCRIPT_URL}?action=update&id=${currentId}&timestamp=${timestamp}`);
-
-        const result = await response.json();
-        if (result.status === 'success') {
-            alert('✅ Obecność zatwierdzona!');
-            resetScanner();
-        } else {
-            alert('❌ Błąd zatwierdzania obecności.');
-        }
+      const response = await fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          action: 'update',
+          id: currentId,
+          timestamp: new Date().toISOString()
+        })
+      });
+  
+      if (!response.ok) throw new Error(response.statusText);
+      
+      const result = await response.json();
+      if (result.status === 'success') {
+        alert('✅ Obecność zatwierdzona!');
+        resetScanner();
+      } else {
+        alert('❌ Błąd zatwierdzania obecności: ' + (result.message || ''));
+      }
     } catch (error) {
-        console.error('❌ Błąd zapisu obecności:', error);
+      console.error('❌ Błąd zapisu obecności:', error);
+      alert('❌ Błąd połączenia z serwerem');
     }
-}
+  }
 
 // ✅ Resetowanie skanera
 function resetScanner() {
