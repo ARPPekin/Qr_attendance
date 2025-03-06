@@ -2,12 +2,23 @@
 // Konfiguracja Supabase
 const supabaseUrl = 'https://twyruqtqvxsnqctwkswg.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3eXJ1cXRxdnhzbnFjdHdrc3dnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEyNzM2NjksImV4cCI6MjA1Njg0OTY2OX0.K5esJlkidj-JlnR3StGQre3YtnCfVwV1ypB8qibeIHo'; // Twój klucz
-const supabase = window.createClient(supabaseUrl, supabaseKey);
+const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
 // Reszta kodu pozostaje bez zmian
 let currentStream = null;
 let currentId = null;
 
+// Testuj połączenie z Supabase
+async function testConnection() {
+    const { data, error } = await supabase
+        .from('attendance')
+        .select('*')
+        .limit(1);
+    
+    console.log('Test połączenia:', data || error);
+}
+
+testConnection();
 
 // ✅ Funkcja skanowania QR
 function scanFrame(video) {
