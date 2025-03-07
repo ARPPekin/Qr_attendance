@@ -2,7 +2,7 @@ const supabaseUrl = 'https://twyruqtqvxsnqctwkswg.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3eXJ1cXRxdnhzbnFjdHdrc3dnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEyNzM2NjksImV4cCI6MjA1Njg0OTY2OX0.K5esJlkidj-JlnR3StGQre3YtnCfVwV1ypB8qibeIHo'; // Twój klucz
 
 // Inicjalizuj klienta Supabase
-const supabase = createClient(supabaseUrl, supabaseKey);
+const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
 let currentStream = null;
 let currentId = null;
@@ -46,7 +46,6 @@ function scanFrame(video) {
 }
 
 // ✅ Uruchamianie skanera
-// app.js
 async function startScanning() {
     try {
         const video = document.getElementById('qr-video');
@@ -89,7 +88,6 @@ async function startScanning() {
         resetScanner();
     }
 }
-
 
 // ✅ Pobieranie danych z Supabase
 async function fetchAttendanceData() {
