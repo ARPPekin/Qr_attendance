@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Pobranie elementów z DOM
     const startScanButton = document.getElementById("start-scan");
     const video = document.getElementById("qr-video");
-    const canvasElement = document.getElementById("qr-canvas");
+    const canvasElement = document.createElement("canvas"); // Tworzymy dynamicznie ukryty canvas
     const canvas = canvasElement.getContext("2d");
     const userInfo = document.getElementById("user-info");
     const userIdSpan = document.getElementById("user-id");
@@ -31,9 +31,13 @@ document.addEventListener("DOMContentLoaded", function () {
             });
             video.srcObject = stream;
             video.setAttribute("playsinline", true);
-            video.play();
-            scanning = true;
-            requestAnimationFrame(scanQRCode);
+
+            // Czekamy, aż wideo się załaduje
+            video.onloadedmetadata = () => {
+                video.play();
+                scanning = true;
+                scanQRCode(); // Rozpoczynamy skanowanie dopiero po załadowaniu
+            };
         } catch (err) {
             handleCameraError(err);
         }
@@ -55,12 +59,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Funkcja skanowania QR kodu
     function scanQRCode() {
-        if (!scanning) return;
+        if (!scanning || video.readyState !== video.HAVE_ENOUGH_DATA) {
+            requestAnimationFrame(scanQRCode);
+            return;
+        }
 
+        // Ustawienie rozmiaru canvasa dopiero po załadowaniu video
         canvasElement.width = video.videoWidth;
         canvasElement.height = video.videoHeight;
         canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
-        
+
         const imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
         const code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: "dontInvert" });
 
