@@ -5,6 +5,10 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 document.addEventListener("DOMContentLoaded", function () {
+    console.log("Supabase client initialized:", supabase);
+});
+
+document.addEventListener("DOMContentLoaded", function () {
     const video = document.createElement("video");
     const canvasElement = document.getElementById("qr-canvas");
     const canvas = canvasElement.getContext("2d");
