@@ -107,7 +107,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Potwierdzanie obecności użytkownika
     async function confirmCheckIn(id) {
-        const { error } = await supabase.from('users').update({ checkintime: new Date().toISOString() }).eq('id', id);
+        const { error } = await supabase.from('attendance').update({ checkintime: new Date().toISOString() }).eq('id', id);
 
         if (error) {
             alert("Błąd podczas zapisu.");
