@@ -12,6 +12,8 @@
         <h1>Rejestracja obecności</h1>
         <button id="start-scan">Rozpocznij skanowanie</button>
         <video id="qr-video" muted playsinline></video>
+        <canvas id="qr-canvas" class="hidden"></canvas> <!-- DODANE TUTAJ -->
+        
         <div id="user-info" class="hidden">
             <h2>Zweryfikuj dane:</h2>
             <p>ID: <span id="user-id"></span></p>
@@ -24,6 +26,6 @@
     <!-- Ładowanie pliku Supabase z CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@1.28.5/dist/umd/supabase.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.3.1/dist/jsQR.js"></script>
-    <script type="module" src="app.js" defer></script>
+    <script src="app.js" defer></script> <!-- Usunięto type="module", ale zostawiono defer -->
 </body>
 </html>
