@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Pobieranie danych użytkownika z Supabase
     async function fetchUserData(id) {
-        const { data, error } = await supabase.from('users').select('name, surname').eq('id', id).single();
+        const { data, error } = await supabase.from('attendance').select('name, surname').eq('id', id).single();
 
         if (error || !data) {
             alert("Nie znaleziono użytkownika w bazie.");
