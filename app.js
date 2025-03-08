@@ -43,11 +43,34 @@ document.addEventListener("DOMContentLoaded", function () {
             video.onloadedmetadata = () => {
                 video.play();
                 scanning = true;
-                scanQRCode(); // Rozpoczynamy skanowanie dopiero po załadowaniu
+                requestAnimationFrame(scanQRCode); // Rozpoczynamy skanowanie dopiero po załadowaniu
                 setCameraZoom(stream); // Ustawienie zoomu jeśli możliwe
             };
         } catch (err) {
             handleCameraError(err);
+        }
+    }
+
+    function scanQRCode() {
+        if (!scanning || video.readyState !== video.HAVE_ENOUGH_DATA) {
+            requestAnimationFrame(scanQRCode);
+            return;
+        }
+
+        canvasElement.width = 300;  
+        canvasElement.height = 300;
+        canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+
+        const imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+        const code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: "dontInvert" });
+
+        if (code) {
+            scanning = false;
+            video.pause();
+            console.log("Zeskanowano kod:", code.data);
+            fetchUserData(code.data);
+        } else {
+            requestAnimationFrame(scanQRCode);
         }
     }
 
