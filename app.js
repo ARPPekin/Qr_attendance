@@ -26,6 +26,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let scanning = false;
 
+    if (!startScanButton) {
+        console.error("Przycisk start-scan nie został znaleziony w DOM. Sprawdź HTML.");
+        return;
+    }
+
     // Funkcja uruchamiająca kamerę
     async function startCamera() {
         try {
@@ -34,20 +39,21 @@ document.addEventListener("DOMContentLoaded", function () {
                     facingMode: "environment", // Tylna kamera
                     width: { ideal: 1280 }, // Zwiększamy szerokość obrazu
                     height: { ideal: 720 }, // Zwiększamy wysokość obrazu
-                    zoom: 2 // Wstępny zoom (większe wartości mogą być obsługiwane przez niektóre kamery)
                 }
             };
 
             const stream = await navigator.mediaDevices.getUserMedia(constraints);
             video.srcObject = stream;
             video.setAttribute("playsinline", true);
+            video.setAttribute("muted", ""); // iOS wymaga mutowania wideo
+            video.setAttribute("autoplay", ""); // Wymuszenie startu wideo
+            video.setAttribute("controls", "false"); // Usunięcie kontrolek
 
             // Czekamy, aż wideo się załaduje
             video.onloadedmetadata = () => {
                 video.play();
                 scanning = true;
-                requestAnimationFrame(scanQRCode); // Rozpoczynamy skanowanie dopiero po załadowaniu
-                setCameraZoom(stream); // Ustawienie zoomu jeśli możliwe
+                requestAnimationFrame(scanQRCode);
             };
         } catch (err) {
             handleCameraError(err);
@@ -118,36 +124,5 @@ document.addEventListener("DOMContentLoaded", function () {
         location.reload();
     }
 
-    async function setCameraZoom(stream) {
-        const [track] = stream.getVideoTracks();
-        const capabilities = track.getCapabilities();
-
-        if (capabilities.zoom) {
-            try {
-                await track.applyConstraints({ advanced: [{ zoom: 2 }] }); // 🔍 Ustawienie zoomu na 2x
-                console.log("Zoom ustawiony na 2x");
-            } catch (error) {
-                console.error("Nie udało się ustawić zoomu:", error);
-            }
-        } else {
-            console.log("Zoom nie jest obsługiwany przez kamerę.");
-        }
-    }
-
-    // Obsługa błędów kamery
-    function handleCameraError(err) {
-        if (err.name === "NotAllowedError") {
-            alert("Brak uprawnień do kamery. Zezwól na dostęp w ustawieniach przeglądarki.");
-        } else if (err.name === "NotFoundError") {
-            alert("Nie znaleziono kamery na urządzeniu.");
-        } else if (err.name === "NotReadableError") {
-            alert("Kamera jest używana przez inną aplikację. Zamknij inne aplikacje korzystające z kamery.");
-        } else {
-            alert("Błąd kamery: " + err.message);
-        }
-        console.error("Błąd podczas uruchamiania kamery:", err);
-    }
-
-    // Event listener do uruchamiania skanowania po kliknięciu przycisku
     startScanButton.addEventListener("click", startCamera);
 });
