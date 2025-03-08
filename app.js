@@ -57,6 +57,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 video.play();
                 video.play();
         scanning = true;
+        userInfo.classList.add("hidden");
+        approveButton.classList.add("hidden");
                 requestAnimationFrame(scanQRCode);
             };
         } catch (err) {
@@ -123,7 +125,7 @@ document.addEventListener("DOMContentLoaded", function () {
             alert("Błąd podczas zapisu.");
         } else {
             const confirmationBox = document.createElement("div");
-            confirmationBox.innerHTML = '<div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0, 255, 0, 0.9); color: white; padding: 20px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); font-size: 20px; display: flex; align-items: center; gap: 10px;">✅ Zapisano!</div>';
+            confirmationBox.innerHTML = '<div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #28a745; color: white; padding: 20px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); font-size: 20px; display: flex; align-items: center; gap: 10px;">✅ Zapisano!</div>';
             document.body.appendChild(confirmationBox);
             setTimeout(() => { confirmationBox.remove(); }, 1500);
         }
@@ -134,8 +136,6 @@ document.addEventListener("DOMContentLoaded", function () {
         requestAnimationFrame(scanQRCode);
     }
 
-
-    
     startScanButton.addEventListener("click", startCamera);
     startCamera();
 });
