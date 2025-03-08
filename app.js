@@ -19,7 +19,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const userIdSpan = document.getElementById("user-id");
     const userNameSpan = document.getElementById("user-name");
     const userSurnameSpan = document.getElementById("user-surname");
-    const userCheckInTimeSpan = document.getElementById("user-checkintime");
     const approveButton = document.getElementById("approve-btn");
 
     let scanning = false;
@@ -90,7 +89,6 @@ document.addEventListener("DOMContentLoaded", function () {
         userIdSpan.textContent = id;
         userNameSpan.textContent = data.name;
         userSurnameSpan.textContent = data.surname;
-        userCheckInTimeSpan.textContent = data.checkintime;
         userInfo.classList.remove("hidden");
         approveButton.classList.remove("hidden");
 
