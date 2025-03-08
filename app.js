@@ -112,7 +112,10 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         // Obsługa zatwierdzenia obecności
-        approveButton.onclick = () => confirmCheckIn(id);
+        approveButton.onclick = () => {
+            confirmCheckIn(id);
+            startCamera(); // Ponowne uruchomienie skanowania po zatwierdzeniu
+        };
     }
 
     async function confirmCheckIn(id) {
