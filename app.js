@@ -23,7 +23,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const approveButton = document.getElementById("approve-btn");
 
     userInfo.appendChild(checkinStatus); // Dodanie statusu check-in do interfejsu
-    userInfo.classList.add("hidden"); // Ukrycie informacji na starcie
+    userInfo.classList.add("hidden");
+        approveButton.classList.add("hidden");
+        console.log("Tabela user-info ukryta"); // Ukrycie informacji na starcie
 
     let scanning = false;
 
@@ -103,6 +105,8 @@ document.addEventListener("DOMContentLoaded", function () {
         userNameSpan.textContent = data.name;
         userSurnameSpan.textContent = data.surname;
         userInfo.classList.remove("hidden");
+        approveButton.classList.remove("hidden");
+        console.log("Tabela user-info pokazana");
         approveButton.classList.remove("hidden");
 
         // Sprawdzenie statusu check-in
