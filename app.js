@@ -90,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function () {
         userIdSpan.textContent = id;
         userNameSpan.textContent = data.name;
         userSurnameSpan.textContent = data.surname;
-        userSCheckInTimeSpan.textContent = data.checkintime;
+        userCheckInTimeSpan.textContent = data.checkintime;
         userInfo.classList.remove("hidden");
         approveButton.classList.remove("hidden");
 
