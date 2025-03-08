@@ -3,18 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="/favicon.ico">
     <title>System rejestracji obecności</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="favicon.png">
 </head>
 <body>
     <div class="container">
         <h1>Rejestracja obecności</h1>
-        <button id="start-scan">Rozpocznij skanowanie</button>
+        <button id="start-scan">Skanuj</button>
         <video id="qr-video" muted playsinline></video>
         <div id="user-info" class="hidden">
-            <h2>Zweryfikuj dane:</h2>
             <p>ID: <span id="user-id"></span></p>
             <p>Imię: <span id="user-name"></span></p>
             <p>Nazwisko: <span id="user-surname"></span></p>

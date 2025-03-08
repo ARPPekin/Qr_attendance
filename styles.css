@@ -1,7 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Silkscreen&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&display=swap');
 
 body {
-    font-family: 'Silkscreen', cursive;
+    font-family: 'Silkscreen', sans-serif;
     font-family: 'Fira Code', monospace;
     margin: 0;
     padding: 20px;
@@ -10,7 +11,7 @@ body {
 }
 
 .container {
-    max-width: 600px;
+    max-width: 100vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
     margin: 0 auto;
     text-align: center;
     background: white;
@@ -56,10 +57,14 @@ button:disabled {
 
 #user-info {
     background: white;
-    padding: 20px;
+    padding: 15px;
     border: 2px solid #8b0000;
     box-shadow: 5px 5px 0px #650000;
-    margin-top: 20px;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 #confirmation-box {
