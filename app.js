@@ -134,6 +134,8 @@ document.addEventListener("DOMContentLoaded", function () {
         requestAnimationFrame(scanQRCode);
     }
 
+
+    
     startScanButton.addEventListener("click", startCamera);
     startCamera();
 });
