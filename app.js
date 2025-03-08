@@ -65,8 +65,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         // Ustawienie rozmiaru canvasa dopiero po załadowaniu video
-        canvasElement.width = video.videoWidth;
-        canvasElement.height = video.videoHeight;
+        canvasElement.width = 300;  
+        canvasElement.height = 300;
         canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
 
         const imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
