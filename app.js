@@ -53,7 +53,8 @@ document.addEventListener("DOMContentLoaded", function () {
             // Czekamy, aż wideo się załaduje
             video.onloadedmetadata = () => {
                 video.play();
-                scanning = true;
+                video.play();
+        scanning = true;
                 requestAnimationFrame(scanQRCode);
             };
         } catch (err) {
@@ -119,7 +120,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (error) {
             alert("Błąd podczas zapisu.");
         } else {
-            console.log("Potwierdzono obecność!");
+            setTimeout(() => { console.log("Potwierdzono obecność!"); }, 500);
         }
 
         userInfo.classList.add("hidden");
