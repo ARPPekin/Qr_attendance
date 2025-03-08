@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function () {
             video.setAttribute("playsinline", true);
             video.setAttribute("muted", ""); // iOS wymaga mutowania wideo
             video.setAttribute("autoplay", ""); // Wymuszenie startu wideo
-            video.setAttribute("controls", "false"); // Usunięcie kontrolek
+            video.removeAttribute("controls"); // Usunięcie kontrolek
 
             // Czekamy, aż wideo się załaduje
             video.onloadedmetadata = () => {
