@@ -19,7 +19,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const userIdSpan = document.getElementById("user-id");
     const userNameSpan = document.getElementById("user-name");
     const userSurnameSpan = document.getElementById("user-surname");
+    const checkinStatus = document.createElement("span");
     const approveButton = document.getElementById("approve-btn");
+
+    userInfo.appendChild(checkinStatus); // Dodanie statusu check-in do interfejsu
 
     let scanning = false;
 
@@ -75,7 +78,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     async function fetchUserData(id) {
-        const { data, error } = await supabase.from('attendance').select('name, surname').eq('id', id).single();
+        const { data, error } = await supabase.from('attendance').select('name, surname, checkintime').eq('id', id).single();
 
         if (error || !data) {
             alert("Nie znaleziono użytkownika w bazie.");
@@ -91,6 +94,13 @@ document.addEventListener("DOMContentLoaded", function () {
         userSurnameSpan.textContent = data.surname;
         userInfo.classList.remove("hidden");
         approveButton.classList.remove("hidden");
+
+        // Sprawdzenie statusu check-in
+        if (data.checkintime) {
+            checkinStatus.innerHTML = ` | <span style="color: orange; font-weight: bold;">⚠️</span>`;
+        } else {
+            checkinStatus.innerHTML = " | ---";
+        }
 
         // Obsługa zatwierdzenia obecności
         approveButton.onclick = () => confirmCheckIn(id);
