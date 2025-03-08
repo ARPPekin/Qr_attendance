@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const approveButton = document.getElementById("approve-btn");
 
     userInfo.appendChild(checkinStatus); // Dodanie statusu check-in do interfejsu
+    userInfo.classList.add("hidden"); // Ukrycie informacji na starcie
 
     let scanning = false;
 
@@ -114,7 +115,8 @@ document.addEventListener("DOMContentLoaded", function () {
         // Obsługa zatwierdzenia obecności
         approveButton.onclick = () => {
             confirmCheckIn(id);
-            startCamera(); // Ponowne uruchomienie skanowania po zatwierdzeniu
+            userInfo.classList.add("hidden"); // Ukrycie po zatwierdzeniu
+            startCamera(); // Ponowne uruchomienie skanowania
         };
     }
 
@@ -128,11 +130,6 @@ document.addEventListener("DOMContentLoaded", function () {
             document.body.appendChild(confirmationBox);
             setTimeout(() => { confirmationBox.remove(); }, 1500);
         }
-
-        userInfo.classList.add("hidden");
-        approveButton.classList.add("hidden");
-        scanning = true;
-        requestAnimationFrame(scanQRCode);
     }
 
     startScanButton.addEventListener("click", startCamera);
