@@ -121,7 +121,10 @@ document.addEventListener("DOMContentLoaded", function () {
             alert("Potwierdzono obecność!");
         }
 
-        location.reload();
+        userInfo.classList.add("hidden");
+        approveButton.classList.add("hidden");
+        scanning = true;
+        requestAnimationFrame(scanQRCode);
     }
 
     startScanButton.addEventListener("click", startCamera);
