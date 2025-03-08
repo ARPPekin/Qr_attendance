@@ -26,9 +26,16 @@ document.addEventListener("DOMContentLoaded", function () {
     // Funkcja uruchamiająca kamerę
     async function startCamera() {
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({
-                video: { facingMode: "environment" } // Tylna kamera
-            });
+            const constraints = {
+                video: {
+                    facingMode: "environment", // Tylna kamera
+                    width: { ideal: 1280 }, // Zwiększamy szerokość obrazu
+                    height: { ideal: 720 }, // Zwiększamy wysokość obrazu
+                    zoom: 2 // Wstępny zoom (większe wartości mogą być obsługiwane przez niektóre kamery)
+                }
+            };
+
+            const stream = await navigator.mediaDevices.getUserMedia(constraints);
             video.srcObject = stream;
             video.setAttribute("playsinline", true);
 
@@ -37,9 +44,26 @@ document.addEventListener("DOMContentLoaded", function () {
                 video.play();
                 scanning = true;
                 scanQRCode(); // Rozpoczynamy skanowanie dopiero po załadowaniu
+                setCameraZoom(stream); // Ustawienie zoomu jeśli możliwe
             };
         } catch (err) {
             handleCameraError(err);
+        }
+    }
+
+    async function setCameraZoom(stream) {
+        const [track] = stream.getVideoTracks();
+        const capabilities = track.getCapabilities();
+
+        if (capabilities.zoom) {
+            try {
+                await track.applyConstraints({ advanced: [{ zoom: 2 }] }); // 🔍 Ustawienie zoomu na 2x
+                console.log("Zoom ustawiony na 2x");
+            } catch (error) {
+                console.error("Nie udało się ustawić zoomu:", error);
+            }
+        } else {
+            console.log("Zoom nie jest obsługiwany przez kamerę.");
         }
     }
 
@@ -55,67 +79,6 @@ document.addEventListener("DOMContentLoaded", function () {
             alert("Błąd kamery: " + err.message);
         }
         console.error("Błąd podczas uruchamiania kamery:", err);
-    }
-
-    // Funkcja skanowania QR kodu
-    function scanQRCode() {
-        if (!scanning || video.readyState !== video.HAVE_ENOUGH_DATA) {
-            requestAnimationFrame(scanQRCode);
-            return;
-        }
-
-        // Ustawienie rozmiaru canvasa dopiero po załadowaniu video
-        canvasElement.width = 300;  
-        canvasElement.height = 300;
-        canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
-
-        const imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
-        const code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: "dontInvert" });
-
-        if (code) {
-            scanning = false;
-            video.pause();
-            console.log("Zeskanowano kod:", code.data);
-            fetchUserData(code.data);
-        } else {
-            requestAnimationFrame(scanQRCode);
-        }
-    }
-
-    // Pobieranie danych użytkownika z Supabase
-    async function fetchUserData(id) {
-        const { data, error } = await supabase.from('attendance').select('name, surname').eq('id', id).single();
-
-        if (error || !data) {
-            alert("Nie znaleziono użytkownika w bazie.");
-            video.play();
-            scanning = true;
-            requestAnimationFrame(scanQRCode);
-            return;
-        }
-
-        // Wyświetlenie danych użytkownika
-        userIdSpan.textContent = id;
-        userNameSpan.textContent = data.name;
-        userSurnameSpan.textContent = data.surname;
-        userInfo.classList.remove("hidden");
-        approveButton.classList.remove("hidden");
-
-        // Obsługa zatwierdzenia obecności
-        approveButton.onclick = () => confirmCheckIn(id);
-    }
-
-    // Potwierdzanie obecności użytkownika
-    async function confirmCheckIn(id) {
-        const { error } = await supabase.from('attendance').update({ checkintime: new Date().toISOString() }).eq('id', id);
-
-        if (error) {
-            alert("Błąd podczas zapisu.");
-        } else {
-            alert("Potwierdzono obecność!");
-        }
-
-        location.reload();
     }
 
     // Event listener do uruchamiania skanowania po kliknięciu przycisku
