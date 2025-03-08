@@ -107,7 +107,7 @@ document.addEventListener("DOMContentLoaded", function () {
         userSurnameSpan.textContent = data.surname;
         userInfo.style.display = 'block';
         console.log("Tabela user-info pokazana");
-        approveButton.classList.remove("hidden");
+        userInfo.style.display = 'block';
         console.log("Tabela user-info pokazana");
         approveButton.classList.remove("hidden");
 
@@ -121,6 +121,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Obsługa zatwierdzenia obecności
         approveButton.onclick = () => {
             confirmCheckIn(id);
+            userInfo.style.display = 'none'; // Ukrycie po zatwierdzeniu
             userInfo.classList.add("hidden"); // Ukrycie po zatwierdzeniu
             startCamera(); // Ponowne uruchomienie skanowania
         };
