@@ -46,7 +46,8 @@ document.addEventListener("DOMContentLoaded", function () {
             video.srcObject = stream;
             video.setAttribute("playsinline", true);
             video.setAttribute("muted", ""); // iOS wymaga mutowania wideo
-            video.setAttribute("autoplay", ""); // Wymuszenie startu wideo
+            video.setAttribute("autoplay", "");
+            video.style.height = "200px"; // Wymuszenie startu wideo
             video.removeAttribute("controls"); // Usunięcie kontrolek
 
             // Czekamy, aż wideo się załaduje
@@ -118,7 +119,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (error) {
             alert("Błąd podczas zapisu.");
         } else {
-            alert("Potwierdzono obecność!");
+            console.log("Potwierdzono obecność!");
         }
 
         userInfo.classList.add("hidden");
@@ -128,4 +129,5 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     startScanButton.addEventListener("click", startCamera);
+    startCamera();
 });
