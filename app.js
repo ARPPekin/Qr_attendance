@@ -122,7 +122,10 @@ document.addEventListener("DOMContentLoaded", function () {
         if (error) {
             alert("Błąd podczas zapisu.");
         } else {
-            setTimeout(() => { console.log("Potwierdzono obecność!"); }, 500);
+            const confirmationBox = document.createElement("div");
+            confirmationBox.innerHTML = '<div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0, 255, 0, 0.9); color: white; padding: 20px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); font-size: 20px; display: flex; align-items: center; gap: 10px;">✅ Zapisano!</div>';
+            document.body.appendChild(confirmationBox);
+            setTimeout(() => { confirmationBox.remove(); }, 1500);
         }
 
         userInfo.classList.add("hidden");
