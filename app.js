@@ -19,6 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const userIdSpan = document.getElementById("user-id");
     const userNameSpan = document.getElementById("user-name");
     const userSurnameSpan = document.getElementById("user-surname");
+    const userCheckInTimeSpan = document.getElementById("user-checkintime");
     const approveButton = document.getElementById("approve-btn");
 
     let scanning = false;
@@ -89,11 +90,24 @@ document.addEventListener("DOMContentLoaded", function () {
         userIdSpan.textContent = id;
         userNameSpan.textContent = data.name;
         userSurnameSpan.textContent = data.surname;
+        userSCheckInTimeSpan.textContent = data.checkintime;
         userInfo.classList.remove("hidden");
         approveButton.classList.remove("hidden");
 
         // Obsługa zatwierdzenia obecności
         approveButton.onclick = () => confirmCheckIn(id);
+    }
+
+    async function confirmCheckIn(id) {
+        const { error } = await supabase.from('attendance').update({ checkintime: new Date().toISOString() }).eq('id', id);
+
+        if (error) {
+            alert("Błąd podczas zapisu.");
+        } else {
+            alert("Potwierdzono obecność!");
+        }
+
+        location.reload();
     }
 
     async function setCameraZoom(stream) {
