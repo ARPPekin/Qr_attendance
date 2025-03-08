@@ -12,30 +12,30 @@ body {
     text-align: center;
     background: white;
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 2px solid #8b0000;
+    box-shadow: 5px 5px 0px #650000;
 }
 
 #qr-video {
     width: 250px;
     height: auto;
-    border: 3px solid #8b0000; /* Ciemnoczerwony obramowanie */
-    border-radius: 8px;
+    border: 3px solid #8b0000;
+    box-shadow: 5px 5px 0px #650000;
     margin-top: 10px;
     background: black;
     object-fit: cover;
 }
 
 button {
-    background: #8b0000; /* Ciemnoczerwony */
+    background: #8b0000;
     color: white;
-    border: none;
+    border: 2px solid black;
     padding: 12px 24px;
-    border-radius: 5px;
-    cursor: pointer;
+    box-shadow: 4px 4px 0px black;
     font-size: 16px;
     margin: 10px;
     transition: background 0.3s;
+    cursor: pointer;
 }
 
 button:hover {
@@ -44,6 +44,7 @@ button:hover {
 
 button:disabled {
     background: #6c757d;
+    box-shadow: none;
 }
 
 .hidden {
@@ -53,10 +54,9 @@ button:disabled {
 #user-info {
     background: white;
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-top: 20px;
     border: 2px solid #8b0000;
+    box-shadow: 5px 5px 0px #650000;
+    margin-top: 20px;
 }
 
 #confirmation-box {
@@ -67,8 +67,8 @@ button:disabled {
     background: #8b0000;
     color: white;
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    border: 2px solid black;
+    box-shadow: 5px 5px 0px black;
     font-size: 20px;
     display: flex;
     align-items: center;
