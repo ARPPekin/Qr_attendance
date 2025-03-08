@@ -36,6 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
         try {
             const constraints = {
                 video: {
+                    zoom: 2,
                     facingMode: "environment", // Tylna kamera
                     width: { ideal: 1280 }, // Zwiększamy szerokość obrazu
                     height: { ideal: 720 }, // Zwiększamy wysokość obrazu
@@ -47,7 +48,8 @@ document.addEventListener("DOMContentLoaded", function () {
             video.setAttribute("playsinline", true);
             video.setAttribute("muted", ""); // iOS wymaga mutowania wideo
             video.setAttribute("autoplay", "");
-            video.style.height = "200px"; // Wymuszenie startu wideo
+            video.style.height = "200px";
+            video.style.objectFit = "cover"; // Wymuszenie startu wideo
             video.removeAttribute("controls"); // Usunięcie kontrolek
 
             // Czekamy, aż wideo się załaduje
