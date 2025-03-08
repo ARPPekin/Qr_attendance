@@ -74,6 +74,28 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    async function fetchUserData(id) {
+        const { data, error } = await supabase.from('attendance').select('name, surname').eq('id', id).single();
+
+        if (error || !data) {
+            alert("Nie znaleziono użytkownika w bazie.");
+            video.play();
+            scanning = true;
+            requestAnimationFrame(scanQRCode);
+            return;
+        }
+
+        // Wyświetlenie danych użytkownika
+        userIdSpan.textContent = id;
+        userNameSpan.textContent = data.name;
+        userSurnameSpan.textContent = data.surname;
+        userInfo.classList.remove("hidden");
+        approveButton.classList.remove("hidden");
+
+        // Obsługa zatwierdzenia obecności
+        approveButton.onclick = () => confirmCheckIn(id);
+    }
+
     async function setCameraZoom(stream) {
         const [track] = stream.getVideoTracks();
         const capabilities = track.getCapabilities();
