@@ -1,56 +1,52 @@
-@import url('https://fonts.googleapis.com/css2?family=Silkscreen&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
 
 body {
-    font-family: 'Silkscreen', sans-serif;
-    font-family: 'Fira Code', monospace;
+    font-family: 'VT323', monospace; /* Czcionka w stylu telegazety */
     margin: 0;
-    font-weight: 400;
-    font-style: normal;
-    padding: 20px;
-    background: #f8f8f8;
-    color: #333;
+    padding: 10px;
+    background: black;
+    color: yellow; /* Kontrastowy kolor jak w telegazecie */
+    text-transform: uppercase;
 }
 
 .container {
-    max-width: 100vw; display: flex; flex-direction: column; align-items: center;
-    margin: 0 auto;
+    max-width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
-    background: white;
-    padding: 20px;
-    border: 2px solid #8b0000;
-    box-shadow: 5px 5px 0px #650000;
+    background: black;
+    padding: 10px;
+    border: 2px solid cyan; /* Typowe kolory z telegazety */
+    color: yellow;
 }
 
 #qr-video {
     width: 250px;
     height: auto;
-    border: 3px solid #8b0000;
-    box-shadow: 5px 5px 0px #650000;
-    margin-top: 10px;
+    border: 3px solid cyan;
     background: black;
     object-fit: cover;
 }
 
 button {
-    background: #8b0000;
+    background: blue;
     color: white;
-    border: 2px solid black;
+    border: 2px solid yellow;
     padding: 12px 24px;
-    box-shadow: 4px 4px 0px black;
-    font-size: 16px;
+    font-size: 18px;
     margin: 10px;
-    transition: background 0.3s;
+    text-transform: uppercase;
     cursor: pointer;
 }
 
 button:hover {
-    background: #a52a2a;
+    background: red;
 }
 
 button:disabled {
-    background: #6c757d;
-    box-shadow: none;
+    background: gray;
+    color: darkgray;
 }
 
 .hidden {
@@ -58,15 +54,15 @@ button:disabled {
 }
 
 #user-info {
-    background: white;
-    padding: 15px;
-    border: 2px solid #8b0000;
-    box-shadow: 5px 5px 0px #650000;
-    margin-top: 10px;
+    background: black;
+    padding: 10px;
+    border: 2px solid cyan;
+    color: yellow;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    text-transform: uppercase;
 }
 
 #confirmation-box {
@@ -74,17 +70,16 @@ button:disabled {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: #8b0000;
+    background: red;
     color: white;
-    padding: 20px;
-    border: 2px solid black;
-    box-shadow: 5px 5px 0px black;
-    font-size: 20px;
+    padding: 15px;
+    border: 2px solid yellow;
+    font-size: 24px;
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
 #confirmation-box span {
-    font-size: 24px;
+    font-size: 32px;
 }
