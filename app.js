@@ -113,7 +113,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Sprawdzenie statusu check-in
         if (data.checkintime) {
-            checkinStatus.innerHTML = ` | <span style="color: orange; font-weight: bold;">⚠️</span>`;
+            checkinStatus.innerHTML = ` | <span style="color: orange; font-weight: bold; font-size: 2em;">⚠️</span>`;
         } else {
             checkinStatus.innerHTML = " | ---";
         }
@@ -128,7 +128,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     async function confirmCheckIn(id) {
-        const { error } = await supabase.from('attendance').update({ checkintime: new Date().toISOString() }).eq('id', id);
+        const now = new Date();
+        const chinaTime = new Date(now.getTime() + (8 * 60 * 60 * 1000)).toISOString();
+        const { error } = await supabase.from('attendance').update({ checkintime: chinaTime }).eq('id', id);
 
         if (!error) {
             const confirmationBox = document.createElement("div");
