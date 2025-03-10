@@ -128,8 +128,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     async function confirmCheckIn(id) {
-        const { error } = await supabase.from('attendance').update({ checkintime: new Date().toISOString() }).eq('id', id);
-
+        // Pobranie aktualnego czasu w chińskiej strefie czasowej (UTC+8)
+        const now = new Date();
+        const chinaTime = new Date(now.getTime() + (8 * 60 * 60 * 1000)).toISOString();
+    
+        const { error } = await supabase.from('attendance').update({ checkintime: chinaTime }).eq('id', id);
+    
         if (!error) {
             const confirmationBox = document.createElement("div");
             confirmationBox.id = "confirmation-box";
@@ -138,6 +142,7 @@ document.addEventListener("DOMContentLoaded", function () {
             setTimeout(() => { confirmationBox.remove(); }, 1500);
         }
     }
+    
 
     startScanButton.addEventListener("click", startCamera);
     startCamera();
