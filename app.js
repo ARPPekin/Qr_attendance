@@ -128,14 +128,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     async function confirmCheckIn(id) {
-        const now = new Date();
-        const chinaTime = new Date(now.getTime() + (8 * 60 * 60 * 1000)).toISOString();
-        const { error } = await supabase.from('attendance').update({ checkintime: chinaTime }).eq('id', id);
+        const { error } = await supabase.from('attendance').update({ checkintime: new Date().toISOString() }).eq('id', id);
 
         if (!error) {
             const confirmationBox = document.createElement("div");
             confirmationBox.id = "confirmation-box";
-            confirmationBox.innerHTML = '<img src='libs/okay.gif' alt='Zapisano!' style='width: 40px; height: 40px;'> Zapisano!';
+            confirmationBox.innerHTML = '<span>✅</span> Zapisano!';
             document.body.appendChild(confirmationBox);
             setTimeout(() => { confirmationBox.remove(); }, 1500);
         }
