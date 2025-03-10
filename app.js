@@ -137,7 +137,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!error) {
             const confirmationBox = document.createElement("div");
             confirmationBox.id = "confirmation-box";
-            confirmationBox.innerHTML = '<img src='libs/okay.gif' alt='Zapisano!' style='width: 40px; height: 40px;'> Zapisano!';
+            confirmationBox.innerHTML = "<div style='display: flex; align-items: center; gap: 10px;'><img src='libs/okay.gif' alt='Zapisano!' style='width: 40px; height: 40px;'><span>Zapisano!</span></div>";
             document.body.appendChild(confirmationBox);
             setTimeout(() => { confirmationBox.remove(); }, 1500);
         }
