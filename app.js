@@ -113,7 +113,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Sprawdzenie statusu check-in
         if (data.checkintime) {
-            checkinStatus.innerHTML = ` | <span style="color: orange; font-weight: bold;">⚠️</span>`;
+            checkinStatus.innerHTML = ` | <span style="color: orange; font-weight: bold; font-size: 3em;">⚠️</span>`;
         } else {
             checkinStatus.innerHTML = " | ---";
         }
