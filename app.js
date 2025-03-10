@@ -113,7 +113,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Sprawdzenie statusu check-in
         if (data.checkintime) {
-            checkinStatus.innerHTML = ` | <span style="color: orange; font-weight: bold; font-size: 2em;">⚠️</span>`;
+            checkinStatus.innerHTML = ` | <span style="color: orange; font-weight: bold; font-size: 3em;">⚠️</span>`;
         } else {
             checkinStatus.innerHTML = " | ---";
         }
@@ -135,7 +135,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!error) {
             const confirmationBox = document.createElement("div");
             confirmationBox.id = "confirmation-box";
-            confirmationBox.innerHTML = '<span>✅</span> Zapisano!';
+            confirmationBox.innerHTML = '<img src='libs/okay.gif' alt='Zapisano!' style='width: 40px; height: 40px;'> Zapisano!';
             document.body.appendChild(confirmationBox);
             setTimeout(() => { confirmationBox.remove(); }, 1500);
         }
