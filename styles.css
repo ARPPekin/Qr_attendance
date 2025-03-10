@@ -1,56 +1,58 @@
-@import url('https://fonts.googleapis.com/css2?family=Silkscreen&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
 
 body {
-    font-family: 'Silkscreen', sans-serif;
-    font-family: 'Fira Code', monospace;
+    background: url('flaga-polska.png') no-repeat center center fixed;
+    background-size: cover;
+    opacity: 0.95;
+    font-family: 'Montserrat', sans-serif;
     margin: 0;
-    font-weight: 400;
-    font-style: normal;
     padding: 20px;
-    background: #f8f8f8;
+    background: white;
     color: #333;
+    text-align: center;
 }
 
 .container {
-    max-width: 100vw; display: flex; flex-direction: column; align-items: center;
-    margin: 0 auto;
-    text-align: center;
+    max-width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     background: white;
     padding: 20px;
-    border: 2px solid #8b0000;
-    box-shadow: 5px 5px 0px #650000;
+    border: 2px solid #d32f2f; /* Czerwony dla podkreślenia */
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+    color: #333;
 }
 
 #qr-video {
     width: 250px;
     height: auto;
-    border: 3px solid #8b0000;
-    box-shadow: 5px 5px 0px #650000;
-    margin-top: 10px;
+    border: 3px solid #d32f2f;
     background: black;
     object-fit: cover;
 }
 
 button {
-    background: #8b0000;
+    background: #d32f2f;
     color: white;
-    border: 2px solid black;
+    border: none;
     padding: 12px 24px;
-    box-shadow: 4px 4px 0px black;
-    font-size: 16px;
+    font-size: 18px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
     margin: 10px;
-    transition: background 0.3s;
     cursor: pointer;
+    transition: background 0.3s;
+    border-radius: 4px;
 }
 
 button:hover {
-    background: #a52a2a;
+    background: #b71c1c;
 }
 
 button:disabled {
-    background: #6c757d;
-    box-shadow: none;
+    background: #ccc;
+    color: #666;
 }
 
 .hidden {
@@ -60,9 +62,8 @@ button:disabled {
 #user-info {
     background: white;
     padding: 15px;
-    border: 2px solid #8b0000;
-    box-shadow: 5px 5px 0px #650000;
-    margin-top: 10px;
+    border: 2px solid #d32f2f;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -74,17 +75,17 @@ button:disabled {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: #8b0000;
+    background: #d32f2f;
     color: white;
-    padding: 20px;
-    border: 2px solid black;
-    box-shadow: 5px 5px 0px black;
-    font-size: 20px;
+    padding: 15px;
+    border-radius: 5px;
+    font-size: 24px;
     display: flex;
     align-items: center;
     gap: 10px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 #confirmation-box span {
-    font-size: 24px;
+    font-size: 32px;
 }
