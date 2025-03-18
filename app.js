@@ -24,9 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     userInfo.appendChild(checkinStatus); // Dodanie statusu check-in do interfejsu
     userInfo.style.display = 'none';
-        console.log("Tabela user-info ukryta");
-        approveButton.classList.add("hidden");
-        console.log("Tabela user-info ukryta"); // Ukrycie informacji na starcie
+    approveButton.classList.add("hidden");
 
     let scanning = false;
 
@@ -94,10 +92,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const { data, error } = await supabase.from('attendance').select('name, surname, checkintime').eq('id', id).single();
 
         if (error || !data) {
-            alert("Nie znaleziono użytkownika w bazie.");
-            video.play();
-            scanning = true;
-            requestAnimationFrame(scanQRCode);
+            showErrorMessage("Nie znaleziono użytkownika!");
             return;
         }
 
@@ -106,9 +101,6 @@ document.addEventListener("DOMContentLoaded", function () {
         userNameSpan.textContent = data.name;
         userSurnameSpan.textContent = data.surname;
         userInfo.style.display = 'block';
-        console.log("Tabela user-info pokazana");
-        userInfo.style.display = 'block';
-        console.log("Tabela user-info pokazana");
         approveButton.classList.remove("hidden");
 
         // Sprawdzenie statusu check-in
@@ -135,14 +127,25 @@ document.addEventListener("DOMContentLoaded", function () {
         const { error } = await supabase.from('attendance').update({ checkintime: chinaTime }).eq('id', id);
     
         if (!error) {
-            const confirmationBox = document.createElement("div");
-            confirmationBox.id = "confirmation-box";
-            confirmationBox.innerHTML = "<div style='display: flex; align-items: center; gap: 10px;'><img src='libs/okay.gif' alt='Zapisano!' style='width: 40px; height: 40px;'><span>Zapisano!</span></div>";
-            document.body.appendChild(confirmationBox);
-            setTimeout(() => { confirmationBox.remove(); }, 1500);
+            showSuccessMessage("Zapisano!");
         }
     }
-    
+
+    function showErrorMessage(message) {
+        const errorBox = document.createElement("div");
+        errorBox.id = "error-box";
+        errorBox.innerHTML = "<div style='display: flex; align-items: center; gap: 10px; background: #d32f2f; color: white; padding: 15px; border-radius: 5px; font-size: 20px;'><img src='libs/error.gif' alt='Błąd' style='width: 40px; height: 40px;'><span>" + message + "</span></div>";
+        document.body.appendChild(errorBox);
+        setTimeout(() => { errorBox.remove(); scanning = true; requestAnimationFrame(scanQRCode); }, 1500);
+    }
+
+    function showSuccessMessage(message) {
+        const confirmationBox = document.createElement("div");
+        confirmationBox.id = "confirmation-box";
+        confirmationBox.innerHTML = "<div style='display: flex; align-items: center; gap: 10px;'><img src='libs/okay.gif' alt='Zapisano!' style='width: 40px; height: 40px;'><span>" + message + "</span></div>";
+        document.body.appendChild(confirmationBox);
+        setTimeout(() => { confirmationBox.remove(); }, 1500);
+    }
 
     startScanButton.addEventListener("click", startCamera);
     startCamera();
